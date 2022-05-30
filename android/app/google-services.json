@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "132407279569",
+    "project_id": "vibu-comic-86908",
+    "storage_bucket": "vibu-comic-86908.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132407279569:android:087de6318d58f28546eaf0",
+        "android_client_info": {
+          "package_name": "com.example.vibu_comic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132407279569-thv6gdclhkopmepsnppl42p0v95837m5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_nPixWoLeHJgD0dwvpBIhiMalyvJaTQY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132407279569-thv6gdclhkopmepsnppl42p0v95837m5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
