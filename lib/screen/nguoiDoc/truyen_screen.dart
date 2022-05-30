@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vibu_comic/screen/nguoiDoc/doctruyen_screen.dart';
 
 class TruyenScreen extends StatefulWidget {
   @override
@@ -54,6 +55,7 @@ class ThongTinTruyenTilte extends StatelessWidget {
                   Text(
                     "Giá: " + gia.toString() + "đ/Chương",
                   ),
+                  Container(child: ClipRect(child: Text(moTa)))
                 ],
               ),
             ),
@@ -85,36 +87,46 @@ class _TruyenScreenState extends State<TruyenScreen> {
             height: size.height * 0.3,
             width: size.width,
             child: ThongTinTruyenTilte(
-                image: Image(
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/anhtruyen.jpg'),
-                ),
-                gia: 1500,
-                moTa: "dgkajdsglk",
-                tenKhac: "Thánh phồng tôm",
-                tenTruyen: "OnePunch-Man",
-                theLoai: const ["Action", "Manga"]),
+              image: Image(
+                fit: BoxFit.fill,
+                image: AssetImage('assets/anhtruyen.jpg'),
+              ),
+              gia: 1500,
+              moTa:
+                  "Onepunch-Man là một Manga thể loại siêu anh hùng với đặc trưng phồng tôm đấm phát chết luôn… Lol!!! Nhân vật chính trong Onepunch-man là Saitama, một con người mà nhìn đâu cũng thấy “tầm thường”",
+              tenKhac: "Thánh phồng tôm",
+              tenTruyen: "OnePunch-Man",
+              theLoai: const ["Action", "Manga"],
+            ),
           ),
           Expanded(
             child: ListView.builder(
               itemCount: 10,
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: GestureDetector(
-                    onTap: () {
-                      print("Chương $index");
-                    },
-                    child: Text(
-                      "Chương " + index.toString(),
+                return Column(
+                  children: [
+                    ListTile(
+                      title: GestureDetector(
+                        onTap: () {
+                          print("Chương $index");
+                          Navigator.of(context).pushNamed("/user/doctruyen");
+                        },
+                        child: Text(
+                          "Chương " + index.toString(),
+                        ),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(Icons.bookmark_border),
+                          Icon(Icons.lock),
+                        ],
+                      ),
                     ),
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.bookmark_border),
-                      Icon(Icons.lock),
-                    ],
-                  ),
+                    Divider(
+                      height: 1,
+                    )
+                  ],
                 );
               },
             ),

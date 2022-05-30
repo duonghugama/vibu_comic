@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vibu_comic/screen/admin/trangchu_screen.dart';
 import 'package:vibu_comic/screen/login_screen.dart';
+import 'package:vibu_comic/screen/nguoiDoc/doctruyen_screen.dart';
 import 'package:vibu_comic/screen/nguoiDoc/trangchu_screen.dart';
 import 'package:vibu_comic/screen/nguoiDoc/truyen_screen.dart';
 import 'package:vibu_comic/screen/signup_screen.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         "/signup": ((context) => SignUpScreen()),
         "/user/home": (context) => UserHomeScrene(),
         "/user/truyen": (context) => TruyenScreen(),
+        "/user/doctruyen": (context) => DocTruyenScreen(),
         "/admin/home": (context) => AdminHomeScreen(),
       },
     );
