@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -74,10 +75,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: const InputDecoration(labelText: "Tên đăng nhập"),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
-                    if (value == null) {
-                      'Tên đăng nhập không được để trống';
-                    } else
-                      null;
+                    if (value == null || value.isEmpty) {
+                      return 'Tên đăng nhập không được để trống';
+                    } else {
+                      return null;
+                    }
                   },
                 ),
               ),
@@ -90,6 +92,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: TextFormField(
                   controller: emailController,
                   decoration: const InputDecoration(labelText: "Email"),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || !EmailValidator.validate(value)) {
+                      return 'Email chưa chính xác';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
               ),
               SizedBox(
@@ -102,6 +112,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: const InputDecoration(labelText: "Mật khẩu"),
                   obscureText: true,
                   controller: passwordController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value.length < 6) {
+                      return 'Mật khẩu có tối thiểu 6 ký tự';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
               ),
               SizedBox(
@@ -114,6 +132,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: const InputDecoration(labelText: "Nhập lại Mật khẩu"),
                   obscureText: true,
                   controller: confirmpasswordController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: (value) {
+                    if (value == null || value.isEmpty || value != passwordController.text) {
+                      return 'Mật khẩu chưa chính xác';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
               ),
               SizedBox(
@@ -125,6 +151,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
                 child: RaisedButton(
                   onPressed: () {
+                    if (formkey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Thông tin chưa chính xác')),
+                      );
+                    }
                     if (confirmpasswordController.text != passwordController.text) {
                       Fluttertoast.showToast(msg: "Mật khẩu chưa chính xác");
                       return;

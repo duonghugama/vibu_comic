@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:vibu_comic/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vibu_comic/screen/nguoiDoc/trangchu_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -14,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
   LoginScreenState();
   Future signIn() async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -29,6 +30,8 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
+    userNameController.text = "admin";
+    passwordController.text = "12345678";
     super.initState();
   }
 

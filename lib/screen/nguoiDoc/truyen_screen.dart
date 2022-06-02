@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vibu_comic/screen/nguoiDoc/doctruyen_screen.dart';
+import 'package:vibu_comic/storage_service.dart';
 
 class TruyenScreen extends StatefulWidget {
   @override
@@ -55,7 +55,7 @@ class ThongTinTruyenTilte extends StatelessWidget {
                   Text(
                     "Giá: " + gia.toString() + "đ/Chương",
                   ),
-                  Container(child: ClipRect(child: Text(moTa)))
+                  ClipRect(child: Text(moTa))
                 ],
               ),
             ),
@@ -67,6 +67,7 @@ class ThongTinTruyenTilte extends StatelessWidget {
 }
 
 class _TruyenScreenState extends State<TruyenScreen> {
+  Storage storage = Storage();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -83,22 +84,34 @@ class _TruyenScreenState extends State<TruyenScreen> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            height: size.height * 0.3,
-            width: size.width,
-            child: ThongTinTruyenTilte(
-              image: Image(
-                fit: BoxFit.fill,
-                image: AssetImage('assets/anhtruyen.jpg'),
-              ),
-              gia: 1500,
-              moTa:
-                  "Onepunch-Man là một Manga thể loại siêu anh hùng với đặc trưng phồng tôm đấm phát chết luôn… Lol!!! Nhân vật chính trong Onepunch-man là Saitama, một con người mà nhìn đâu cũng thấy “tầm thường”",
-              tenKhac: "Thánh phồng tôm",
-              tenTruyen: "OnePunch-Man",
-              theLoai: const ["Action", "Manga"],
-            ),
-          ),
+          FutureBuilder(
+              future: storage.downloadURL("OnePunch-Man/AnhTruyen.jpg"),
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+                  return SizedBox(
+                    height: size.height * 0.36,
+                    width: size.width,
+                    child: ThongTinTruyenTilte(
+                      image: Image.network(
+                        '${snapshot.data!}',
+                        fit: BoxFit.fill,
+                      ),
+                      gia: 1500,
+                      moTa:
+                          "Onepunch-Man là một Manga thể loại siêu anh hùng với đặc trưng phồng tôm đấm phát chết luôn… Lol!!! Nhân vật chính trong Onepunch-man là Saitama, một con người mà nhìn đâu cũng thấy “tầm thường”",
+                      tenKhac: "Thánh phồng tôm",
+                      tenTruyen: "OnePunch-Man",
+                      theLoai: const ["Action", "Manga"],
+                    ),
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+                return Center(
+                  child: Text('Lỗi load ảnh'),
+                );
+              }),
           Expanded(
             child: ListView.builder(
               itemCount: 10,
