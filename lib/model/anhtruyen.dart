@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 class AnhTruyen extends Equatable {
-  final String path;
-  final String idTruyen;
-  final String idChap;
+  final String link;
 
-  const AnhTruyen({required this.path, required this.idTruyen, required this.idChap});
+  const AnhTruyen({required this.link});
   @override
   List<Object?> get props => throw UnimplementedError();
 }

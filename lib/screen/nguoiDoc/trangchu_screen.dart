@@ -1,11 +1,16 @@
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firedart/firestore/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vibu_comic/model/truyen.dart';
+import 'package:vibu_comic/model/user.dart';
+import 'package:vibu_comic/screen/login_screen.dart';
+import 'package:vibu_comic/screen/nguoiDoc/truyen_screen.dart';
 
 class UserHomeScrene extends StatefulWidget {
+  static UserModel userModel = UserModel(id: "", coin: 0, pass: "", email: "", username: "", isAdmin: false);
   @override
   State<UserHomeScrene> createState() => _UserHomeScreneState();
 }
@@ -16,27 +21,67 @@ class _UserHomeScreneState extends State<UserHomeScrene> {
       .snapshots()
       .map((snapshot) => snapshot.docs.map((e) => Truyen.fromJson(e.data())).toList());
 
-  Widget buildTruyen(Truyen truyen) => Card(
-        margin: EdgeInsets.zero,
-        child: Stack(
-          children: [
-            Image.network(truyen.linkAnhTruyen, fit: BoxFit.fill),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              left: 0,
-              child: Container(
-                color: Colors.black54,
-                padding: EdgeInsets.symmetric(vertical: 8),
-                child: Center(
+  Future<UserModel> getUser(String user) {
+    // QuerySnapshot snapshot = await
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .get()
+        .then((value) {
+      UserHomeScrene.userModel = UserModel.fromJson(value.docs.first.data());
+
+      return UserModel.fromJson(value.docs.first.data());
+    });
+    // return UserModel.fromJson(snapshot.docs.first.data() as Map<String, dynamic>);
+  }
+
+  Stream<UserModel> getUserstream() {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: FirebaseAuth.instance.currentUser!.email)
+        .snapshots()
+        .map((event) {
+      UserHomeScrene.userModel = UserModel.fromJson(event.docs.first.data());
+
+      return UserModel.fromJson(
+        event.docs.first.data(),
+      );
+    });
+  }
+
+  Widget buildTruyen(Truyen truyen) => ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: GestureDetector(
+          onTap: () {
+            print(truyen.idTruyen);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TruyenScreen(idTruyen: truyen.idTruyen),
+              ),
+            );
+          },
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.network(truyen.linkAnhTruyen, fit: BoxFit.fill),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.black38,
+                    gradient: LinearGradient(
+                        colors: const [Colors.black87, Colors.transparent],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter)),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
                   child: Text(
                     truyen.tenTruyen,
                     style: TextStyle(color: Colors.white, fontSize: 17),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
   var styleDrawerText = TextStyle(color: Colors.white, fontSize: 25);
@@ -47,83 +92,99 @@ class _UserHomeScreneState extends State<UserHomeScrene> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Trang chủ'),
-        actions: const [
+        actions: [
           Icon(Icons.copyright_outlined),
-          Center(child: Text('99999')),
+          // FutureBuilder<UserModel>(
+          //   future: getUser(LoginScreen.username),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.hasData) {
+          //       return Center(child: Text(snapshot.data!.coin.toString()));
+          //     } else {
+          //       return Text("Lỗi ");
+          //     }
+          //   },
+          // )
+          StreamBuilder<UserModel>(
+            stream: getUserstream(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Center(child: Text(snapshot.data!.coin.toString()));
+              } else {
+                return Text("Lỗi ");
+              }
+            },
+          )
         ],
       ),
-      drawer: ClipRRect(
-        borderRadius: BorderRadius.only(bottomRight: Radius.circular(200)),
-        child: Drawer(
-          backgroundColor: Color(0xff001327),
-          child: Column(
-            children: [
-              DrawerHeader(
-                child: Image(
-                  fit: BoxFit.fill,
-                  image: AssetImage('assets/VibuComic.png'),
-                ),
+      drawer: Drawer(
+        backgroundColor: Color(0xff001327),
+        child: Column(
+          children: [
+            DrawerHeader(
+              child: Image(
+                fit: BoxFit.fill,
+                image: AssetImage('assets/VibuComic.png'),
               ),
-              Container(
-                color: Color.fromARGB(255, 6, 34, 85),
-                child: GestureDetector(
-                  onTap: () async {
-                    await Future.delayed(Duration(microseconds: 200));
-                    Navigator.pop(context);
-                  },
-                  child: ListTile(
-                    leading: Icon(Icons.view_column, color: Colors.white),
-                    title: Text(
-                      "Thư viện",
-                      style: styleDrawerText,
-                    ),
+            ),
+            Container(
+              color: Color.fromARGB(255, 6, 34, 85),
+              child: GestureDetector(
+                onTap: () async {
+                  await Future.delayed(Duration(microseconds: 200));
+                  Navigator.pop(context);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.view_column, color: Colors.white),
+                  title: Text(
+                    "Thư viện",
+                    style: styleDrawerText,
                   ),
                 ),
               ),
-              Divider(
-                height: 2,
-              ),
-              Container(
-                color: Color.fromARGB(255, 6, 34, 85),
-                child: GestureDetector(
-                  onTap: () async {
-                    await Future.delayed(Duration(microseconds: 200));
-                    Navigator.pop(context);
-                  },
-                  child: ListTile(
-                    leading: Icon(Icons.person, color: Colors.white),
-                    title: Text(
-                      "Thông tin cá nhân",
-                      style: styleDrawerText,
-                    ),
+            ),
+            Divider(
+              height: 2,
+            ),
+            Container(
+              color: Color.fromARGB(255, 6, 34, 85),
+              child: GestureDetector(
+                onTap: () async {
+                  await Future.delayed(Duration(microseconds: 200));
+                  Navigator.pop(context);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.person, color: Colors.white),
+                  title: Text(
+                    "Thông tin cá nhân",
+                    style: styleDrawerText,
                   ),
                 ),
               ),
-              Divider(
-                height: 2,
-              ),
-              Container(
-                color: Color.fromARGB(255, 6, 34, 85),
-                child: GestureDetector(
-                  onTap: () async {
-                    await Future.delayed(Duration(microseconds: 200));
-                    FirebaseAuth.instance.signOut();
-                    Navigator.pop(context);
-                  },
-                  child: ListTile(
-                    leading: Icon(Icons.logout, color: Colors.white),
-                    title: Text(
-                      "Đăng xuất",
-                      style: styleDrawerText,
-                    ),
+            ),
+            Divider(
+              height: 2,
+            ),
+            Container(
+              color: Color.fromARGB(255, 6, 34, 85),
+              child: GestureDetector(
+                onTap: () async {
+                  await Future.delayed(Duration(microseconds: 200));
+                  FirebaseAuth.instance.signOut();
+                  Navigator.pop(context);
+                },
+                child: ListTile(
+                  leading: Icon(Icons.logout, color: Colors.white),
+                  title: Text(
+                    "Đăng xuất",
+                    style: styleDrawerText,
                   ),
                 ),
               ),
-              Divider(
-                height: 2,
-              ),
-            ],
-          ),
+            ),
+            Divider(
+              height: 2,
+            ),
+          ],
         ),
       ),
       body: StreamBuilder<List<Truyen>>(
@@ -150,21 +211,6 @@ class _UserHomeScreneState extends State<UserHomeScrene> {
               child: CircularProgressIndicator(),
             );
           }),
-      floatingActionButton: AnimSearchBar(
-        rtl: true,
-        suffixIcon: Icon(Icons.search),
-        closeSearchOnSuffixTap: true,
-        helpText: 'Nhập tên truyện',
-        width: size.width * 0.9,
-        textController: seacrhController,
-        onSuffixTap: () {
-          setState(
-            () {
-              seacrhController.clear();
-            },
-          );
-        },
-      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:vibu_comic/model/chaptruyen.dart';
 
 class Truyen extends Equatable {
   final String idTruyen;
@@ -10,6 +11,8 @@ class Truyen extends Equatable {
   final bool daHoanThanh;
   final int gia;
   final String linkAnhTruyen;
+  final List theLoai;
+  final List<ChapTruyen>? chaps;
   const Truyen(
       {required this.linkAnhTruyen,
       required this.daHoanThanh,
@@ -18,19 +21,36 @@ class Truyen extends Equatable {
       required this.tenTruyen,
       required this.tenKhac,
       required this.tacGia,
-      // required this.idTheLoai,
+      required this.theLoai,
+      this.chaps,
       required this.moTa});
 
   factory Truyen.fromJson(Map<String, dynamic> json) => Truyen(
-      linkAnhTruyen: json['linkAnhTruyen'],
-      daHoanThanh: json['daHoanThanh'],
-      gia: json['giaChap'],
-      idTruyen: json['id'],
-      tenTruyen: json['tenTruyen'],
-      tenKhac: json['tenKhac'],
-      tacGia: json['tacGia'],
-      // idTheLoai: json['idTheLoai'],
-      moTa: json['moTa']);
+        linkAnhTruyen: json['linkAnhTruyen'],
+        daHoanThanh: json['daHoanThanh'],
+        gia: json['giaChap'],
+        idTruyen: json['id'],
+        tenTruyen: json['tenTruyen'],
+        tenKhac: json['tenKhac'],
+        tacGia: json['tacGia'],
+        // idTheLoai: json['idTheLoai'],
+        theLoai: json['theLoai'],
+        // chaps: json['chaps'],
+        moTa: json['moTa'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'idTruyen': idTruyen,
+        'tenTruyen': tenTruyen,
+        'tenKhac': tenKhac,
+        'tacGia': tacGia,
+        'moTa': moTa,
+        'daHoanThanh': daHoanThanh,
+        'gia': gia,
+        'linkAnhTruyen': linkAnhTruyen,
+        'theLoai': theLoai,
+        'chaps': chaps,
+      };
   @override
   List<Object?> get props => [idTruyen];
 }

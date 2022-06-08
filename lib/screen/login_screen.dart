@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:vibu_comic/screen/nguoiDoc/trangchu_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class LoginScreen extends StatefulWidget {
+  static String username = "";
   @override
   LoginScreenState createState() {
     return LoginScreenState();
@@ -12,16 +12,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+  bool isAdmin = false;
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
   LoginScreenState();
   Future signIn() async {
+    LoginScreen.username = userNameController.text;
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("users")
         .where("username", isEqualTo: userNameController.text)
         .get();
     String email = snapshot.docs[0]["email"];
+    isAdmin = snapshot.docs[0]['isAdmin'];
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: passwordController.text.trim(),
@@ -30,7 +32,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    userNameController.text = "admin";
+    userNameController.text = "duonghaiten";
     passwordController.text = "12345678";
     super.initState();
   }
@@ -46,6 +48,7 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      // body: loginWidget(size),
       body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -56,7 +59,18 @@ class LoginScreenState extends State<LoginScreen> {
           if (!snapshot.hasData) {
             return loginWidget(size);
           } else {
-            return UserHomeScrene();
+            if (!isAdmin) {
+              return UserHomeScrene();
+            } else {
+              return Center(
+                child: TextButton(
+                  child: Text('Admin'),
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                ),
+              );
+            }
           }
         },
       ),

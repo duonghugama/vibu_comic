@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:132407279569:android:087de6318d58f28546eaf0",
+        "mobilesdk_app_id": "1:132407279569:android:a32a96424c86702446eaf0",
         "android_client_info": {
           "package_name": "com.example.vibu_comic"
         }
@@ -29,6 +29,13 @@
             {
               "client_id": "132407279569-thv6gdclhkopmepsnppl42p0v95837m5.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "132407279569-b86ifcvo5g4pnp6qnrhhpkvpgg4l1jjh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vibuComic"
+              }
             }
           ]
         }
