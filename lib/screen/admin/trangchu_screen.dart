@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firedart/firedart.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:vibu_comic/model/truyen.dart';
+import 'package:vibu_comic/screen/admin/quanlytruyen_screen.dart';
 import 'package:vibu_comic/screen/admin/themtruyen_screen.dart';
+import 'package:vibu_comic/screen/nguoiDoc/truyen_screen.dart';
 
 class AdminHomeScreen extends StatefulWidget {
   @override
@@ -10,8 +12,6 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
-  Reference ref = Firestore.instance.reference("/comicData");
-
   Stream<List<Truyen>> readComics() => FirebaseFirestore.instance
       .collection('comics')
       .snapshots()
@@ -23,18 +23,24 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
   // //   return comics;
   // // }
 
-  Stream<List<Truyen>> getComics() {
-    return Firestore.instance
-        .collection("comics")
-        .stream
-        .map((event) => event.map((e) => Truyen.fromJson(e.map)).toList());
-  }
+  // Stream<List<Truyen>> getComics() {
+  //   return Firestore.instance
+  //       .collection("comics")
+  //       .stream
+  //       .map((event) => event.map((e) => Truyen.fromJson(e.map)).toList());
+  // }
 
   Widget buildTruyen(Truyen truyen) => ClipRRect(
         borderRadius: BorderRadius.circular(15),
         child: GestureDetector(
           onTap: () {
             print(truyen.idTruyen);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => QuanLyTruyenScreen(idTruyen: truyen.idTruyen),
+              ),
+            );
           },
           child: Stack(
             fit: StackFit.expand,
@@ -42,11 +48,12 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               Image.network(truyen.linkAnhTruyen, fit: BoxFit.fill),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.black38,
-                    gradient: LinearGradient(
-                        colors: const [Colors.black87, Colors.transparent],
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter),),
+                  color: Colors.black38,
+                  gradient: LinearGradient(
+                      colors: const [Colors.black87, Colors.transparent],
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter),
+                ),
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Text(
@@ -102,7 +109,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           Expanded(
             flex: 8,
             child: StreamBuilder<List<Truyen>>(
-                stream: getComics(),
+                stream: readComics(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Có lỗi xảy ra!! ${snapshot.error}');

@@ -52,13 +52,13 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCcNFxmTIO5wEameFIaQ_h2CQFBSYTD4TI',
-    appId: '1:132407279569:web:328a74862182435546eaf0',
-    messagingSenderId: '132407279569',
-    projectId: 'vibu-comic-86908',
-    authDomain: 'vibu-comic-86908.firebaseapp.com',
-    storageBucket: 'vibu-comic-86908.appspot.com',
-  );
+      apiKey: "AIzaSyCcNFxmTIO5wEameFIaQ_h2CQFBSYTD4TI",
+      authDomain: "vibu-comic-86908.firebaseapp.com",
+      projectId: "vibu-comic-86908",
+      storageBucket: "vibu-comic-86908.appspot.com",
+      messagingSenderId: "132407279569",
+      appId: "1:132407279569:web:d1d7b32629db90a046eaf0",
+      measurementId: "G-1SMC6YM9JW");
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyD_nPixWoLeHJgD0dwvpBIhiMalyvJaTQY',

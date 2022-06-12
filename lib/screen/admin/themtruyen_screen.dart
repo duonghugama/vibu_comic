@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firedart/firedart.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:vibu_comic/model/truyen.dart';
 
 class ThemTruyenScreen extends StatefulWidget {
@@ -12,57 +16,50 @@ class ThemTruyenScreen extends StatefulWidget {
 }
 
 class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
-  Reference ref = Firestore.instance.reference("/comicData");
+  File image = File("");
+  Uint8List? imagePicked;
+  // PlatformFile? pickedfile;
+  // Reference ref = Firestore.instance.reference("/comicData");
+  // late Uint8List imageDisplayWeb;
 
   Stream<List<Truyen>> readComics() => FirebaseFirestore.instance
       .collection('comics')
       .snapshots()
       .map((snapshot) => snapshot.docs.map((e) => Truyen.fromJson(e.data())).toList());
+  var tenTruyenController = TextEditingController();
+  var tenKhacController = TextEditingController();
+  var giaTruyenController = TextEditingController();
+  var tacGiaController = TextEditingController();
+  var theLoaiController = TextEditingController();
+  var moTaController = TextEditingController();
+  Future createTruyen() async {
+    final docTruyen = FirebaseFirestore.instance.collection("comics").doc();
 
-  File image = File("");
-
-  Stream<List<Truyen>> getComics() {
-    return Firestore.instance
-        .collection("comics")
-        .stream
-        .map((event) => event.map((e) => Truyen.fromJson(e.map)).toList());
+    final path = 'comicData/${docTruyen.id}/AnhTruyen.jpg';
+    final ref = FirebaseStorage.instance.ref().child(path);
+    await ref.putData(imagePicked!);
+    String linkanhtruyen = ref.getDownloadURL().toString();
+    final truyen = Truyen(
+      linkAnhTruyen: linkanhtruyen,
+      daHoanThanh: false,
+      gia: int.tryParse(giaTruyenController.text) ?? 0,
+      idTruyen: docTruyen.id,
+      tenTruyen: tenTruyenController.text,
+      tenKhac: tenKhacController.text,
+      tacGia: tacGiaController.text,
+      theLoai: theLoaiController.text.split(' '),
+      moTa: moTaController.text,
+    );
+    final json = truyen.toJson();
+    await docTruyen.set(json);
+    // await ref.putFile(image);
   }
-
-  Widget buildTruyen(Truyen truyen) => ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: GestureDetector(
-          onTap: () {
-            print(truyen.idTruyen);
-          },
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              Image.network(truyen.linkAnhTruyen, fit: BoxFit.fill),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black38,
-                  gradient: LinearGradient(
-                      colors: const [Colors.black87, Colors.transparent],
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter),
-                ),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Text(
-                    truyen.tenTruyen,
-                    style: TextStyle(color: Colors.white, fontSize: 17),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     // var screenHeight = MediaQuery.of(context).size.height;
+
     bool isWide = screenWidth >= 800;
     return Scaffold(
       body: Row(
@@ -99,7 +96,9 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          createTruyen();
+                        },
                         child: Text("Thêm truyện"),
                       ),
                     ),
@@ -120,58 +119,72 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                         fit: FlexFit.loose,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: image.path.isEmpty
-                              ? Container(
-                                  height: 500,
-                                  width: 200,
-                                  color: Colors.grey,
-                                  child: IconButton(
-                                    icon: Icon(Icons.add_a_photo),
-                                    onPressed: () async {
-                                      FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-                                      if (result != null) {
-                                        setState(() {
-                                          image = File(result.files.single.path!);
-                                        });
-                                      } else {
-                                        // User canceled the picker
-                                      }
-                                    },
-                                  ),
-                                )
-                              : Stack(
-                                  children: [
-                                    Container(
-                                        height: 500,
-                                        width: 200,
-                                        color: Colors.grey,
-                                        child: Image.file(image, fit: BoxFit.fill)),
-                                    Positioned(
-                                      top: 0,
-                                      right: 10,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            image = File("");
-                                          });
-                                        },
-                                        icon: Icon(Icons.highlight_remove, color: Colors.red),
-                                      ),
-                                    ),
-                                  ],
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 500,
+                                width: 200,
+                                color: Colors.grey,
+                                child: IconButton(
+                                  icon: Icon(Icons.add_a_photo),
+                                  onPressed: () async {
+                                    // final result = await FilePicker.platform.pickFiles();
+                                    final picked = await ImagePickerWeb.getImageAsBytes();
+                                    if (picked != null) {
+                                      setState(() {
+                                        imagePicked = picked;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        // pickedfile = null;
+                                      });
+                                    }
+                                  },
                                 ),
+                              ),
+                              imagePicked != null
+                                  ? Stack(
+                                      children: [
+                                        Container(
+                                          height: 500,
+                                          width: 200,
+                                          color: Colors.grey,
+                                          child: !kIsWeb
+                                              ? Image.file(image, fit: BoxFit.fill)
+                                              : Image.memory(imagePicked!),
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          right: 10,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                imagePicked = null;
+                                                image = File("");
+                                              });
+                                            },
+                                            icon: Icon(Icons.highlight_remove, color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Center(),
+                            ],
+                          ),
                         ),
                       ),
                       Flexible(
                         fit: FlexFit.loose,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            Spacer(),
                             Row(
                               children: [
                                 Flexible(
+                                  flex: 10,
                                   child: TextFormField(
+                                    controller: tenTruyenController,
                                     decoration: InputDecoration(
                                       label: Text("Tên truyện"),
                                       focusedBorder: OutlineInputBorder(
@@ -183,8 +196,13 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                                     ),
                                   ),
                                 ),
+                                Spacer(
+                                  flex: 1,
+                                ),
                                 Flexible(
+                                  flex: 10,
                                   child: TextFormField(
+                                    controller: tenKhacController,
                                     decoration: InputDecoration(
                                       label: Text("Tên khác"),
                                       focusedBorder: OutlineInputBorder(
@@ -198,7 +216,9 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                                 )
                               ],
                             ),
+                            Spacer(),
                             TextFormField(
+                              controller: tacGiaController,
                               decoration: InputDecoration(
                                 label: Text("Tác giả"),
                                 focusedBorder: OutlineInputBorder(
@@ -209,7 +229,9 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                                 ),
                               ),
                             ),
+                            Spacer(),
                             TextFormField(
+                              controller: theLoaiController,
                               decoration: InputDecoration(
                                 label: Text("Thể loại"),
                                 focusedBorder: OutlineInputBorder(
@@ -220,6 +242,20 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                                 ),
                               ),
                             ),
+                            Spacer(),
+                            TextFormField(
+                              controller: giaTruyenController,
+                              decoration: InputDecoration(
+                                label: Text("Giá truyện/chap"),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.greenAccent, width: 1.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black, width: 1.0),
+                                ),
+                              ),
+                            ),
+                            Spacer(),
                           ],
                         ),
                       ),
@@ -236,6 +272,7 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                       textAlignVertical: TextAlignVertical.top,
                       expands: true,
                       maxLines: null,
+                      controller: moTaController,
                       decoration: InputDecoration(
                         label: Text("Mô tả"),
                         focusedBorder: OutlineInputBorder(

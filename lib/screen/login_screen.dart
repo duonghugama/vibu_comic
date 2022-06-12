@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:vibu_comic/screen/admin/trangchu_screen.dart';
 import 'package:vibu_comic/screen/nguoiDoc/trangchu_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    userNameController.text = "duonghaiten";
+    userNameController.text = "admin";
     passwordController.text = "12345678";
     super.initState();
   }
@@ -62,14 +63,15 @@ class LoginScreenState extends State<LoginScreen> {
             if (!isAdmin) {
               return UserHomeScrene();
             } else {
-              return Center(
-                child: TextButton(
-                  child: Text('Admin'),
-                  onPressed: () {
-                    FirebaseAuth.instance.signOut();
-                  },
-                ),
-              );
+              return AdminHomeScreen();
+              // return Center(
+              //   child: TextButton(
+              //     child: Text('Admin'),
+              //     onPressed: () {
+              //       FirebaseAuth.instance.signOut();
+              //     },
+              //   ),
+              // );
             }
           }
         },

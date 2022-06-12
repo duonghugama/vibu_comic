@@ -3,16 +3,16 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:vibu_comic/model/chaptruyen.dart';
 import 'package:vibu_comic/model/truyen.dart';
+import 'package:vibu_comic/screen/admin/themchaptruyen_screen.dart';
 import 'package:vibu_comic/screen/nguoiDoc/doctruyen_screen.dart';
-import 'package:vibu_comic/screen/nguoiDoc/doctruyen_screen2.dart';
 import 'package:vibu_comic/screen/nguoiDoc/trangchu_screen.dart';
 
-class TruyenScreen extends StatefulWidget {
+class QuanLyTruyenScreen extends StatefulWidget {
   final String idTruyen;
 
-  const TruyenScreen({Key? key, required this.idTruyen}) : super(key: key);
+  const QuanLyTruyenScreen({Key? key, required this.idTruyen}) : super(key: key);
   @override
-  State<TruyenScreen> createState() => _TruyenScreenState(idTruyen);
+  State<QuanLyTruyenScreen> createState() => _QuanLyTruyenScreenState(idTruyen);
 }
 
 class ThongTinTruyenTilte extends StatelessWidget {
@@ -37,104 +37,95 @@ class ThongTinTruyenTilte extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        color: Colors.grey[300],
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: ClipRRect(borderRadius: BorderRadius.circular(10), child: image),
-                  flex: 1,
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    // color: Colors.red,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tenTruyen!,
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Tác giả: " + tacGia.toString(),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Tên khác: " + tenKhac!,
-                          style: TextStyle(),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text("Thể loại: " + theLoai!.join(",")),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          "Giá: " + gia.toString() + "đ/Chương",
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.favorite_outline),
-                    label: Text("Thêm vào thư viện"),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () {},
-                    icon: Icon(Icons.play_arrow),
-                    label: Text("Đọc truyện"),
-                  )
-                ],
+    return Container(
+      padding: EdgeInsets.all(10),
+      color: Colors.grey[300],
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: ClipRRect(borderRadius: BorderRadius.circular(10), child: image),
+                flex: 1,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ExpandablePanel(
-                theme: ExpandableThemeData(tapBodyToCollapse: true, tapBodyToExpand: true),
-                header: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Mô tả truyện",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  // color: Colors.red,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        tenTruyen!,
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Tác giả: " + tacGia.toString(),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Tên khác: " + tenKhac!,
+                        style: TextStyle(),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text("Thể loại: " + theLoai!.join(",")),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Giá: " + gia.toString() + "đ/Chương",
+                      ),
+                    ],
                   ),
                 ),
-                collapsed: Text(
-                  moTa!,
-                  softWrap: true,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                expanded: Text(moTa!),
               ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.play_arrow),
+                label: Text("Đọc truyện"),
+              )
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: ExpandablePanel(
+              theme: ExpandableThemeData(tapBodyToCollapse: true, tapBodyToExpand: true),
+              header: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "Mô tả truyện",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              collapsed: Text(
+                moTa!,
+                softWrap: true,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              expanded: Text(moTa!),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _TruyenScreenState extends State<TruyenScreen> {
+class _QuanLyTruyenScreenState extends State<QuanLyTruyenScreen> {
   final String idTruyen;
   static Truyen truyen = Truyen(
       linkAnhTruyen: "",
@@ -146,7 +137,7 @@ class _TruyenScreenState extends State<TruyenScreen> {
       tacGia: "",
       theLoai: [],
       moTa: "");
-  _TruyenScreenState(this.idTruyen);
+  _QuanLyTruyenScreenState(this.idTruyen);
 
   Stream<List<ChapTruyen>> getChaps() {
     return FirebaseFirestore.instance
@@ -177,27 +168,38 @@ class _TruyenScreenState extends State<TruyenScreen> {
           },
         ),
       ),
-      body: Column(
+      floatingActionButton: IconButton(
+        icon: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ThemChapTruyenScreen(),
+            ),
+          );
+        },
+      ),
+      body: Row(
         children: [
-          FutureBuilder<Truyen>(
+          Expanded(
+            flex: 1,
+            child: FutureBuilder<Truyen>(
               future: getTruyen(idTruyen),
               builder: (context, snapshot) {
                 if (snapshot.hasData &&
                     snapshot.connectionState == ConnectionState.done &&
                     snapshot.data != null) {
-                  return SizedBox(
-                    child: ThongTinTruyenTilte(
-                      image: Image.network(
-                        '${snapshot.data?.linkAnhTruyen}',
-                        fit: BoxFit.fill,
-                      ),
-                      gia: snapshot.data?.gia,
-                      moTa: snapshot.data?.moTa,
-                      tenKhac: snapshot.data?.tenKhac,
-                      tenTruyen: snapshot.data?.tenTruyen,
-                      theLoai: List<String>.from(snapshot.data!.theLoai.toList()),
-                      tacGia: snapshot.data?.tacGia,
+                  return ThongTinTruyenTilte(
+                    image: Image.network(
+                      '${snapshot.data?.linkAnhTruyen}',
+                      fit: BoxFit.fill,
                     ),
+                    gia: snapshot.data?.gia,
+                    moTa: snapshot.data?.moTa,
+                    tenKhac: snapshot.data?.tenKhac,
+                    tenTruyen: snapshot.data?.tenTruyen,
+                    theLoai: List<String>.from(snapshot.data!.theLoai.toList()),
+                    tacGia: snapshot.data?.tacGia,
                   );
                 }
                 if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
@@ -206,35 +208,39 @@ class _TruyenScreenState extends State<TruyenScreen> {
                 return Center(
                   child: Text('Lỗi load ảnh'),
                 );
-              }),
+              },
+            ),
+          ),
           Expanded(
-              child: StreamBuilder<List<ChapTruyen>>(
-            stream: getChaps(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Lỗi tải chap truyện"),
-                );
-              } else if (snapshot.hasData) {
-                final chaps = snapshot.data!;
-                if (chaps.isEmpty) {
+            flex: 3,
+            child: StreamBuilder<List<ChapTruyen>>(
+              stream: getChaps(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
                   return Center(
-                    child: Text(
-                      "Truyện chưa có chương nào 😢",
-                      style: TextStyle(fontSize: 20),
-                    ),
+                    child: Text("Lỗi tải chap truyện"),
+                  );
+                } else if (snapshot.hasData) {
+                  final chaps = snapshot.data!;
+                  if (chaps.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "Truyện chưa có chương nào 😢",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    );
+                  }
+                  return ListView(
+                    children: chaps.map(buildChap).toList(),
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
                 }
-                return ListView(
-                  children: chaps.map(buildChap).toList(),
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )),
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -248,8 +254,9 @@ class _TruyenScreenState extends State<TruyenScreen> {
           if (idUserUnlock.contains(UserHomeScrene.userModel.id)) {
             Navigator.push(
               context,
-              // MaterialPageRoute(builder: (context) => DocTruyenScreen(idTruyen, chap.idChap)),
-              MaterialPageRoute(builder: (context) => DocTruyenScreen2(chap.linkanh)),
+              MaterialPageRoute(
+                builder: (context) => DocTruyenScreen(idTruyen, chap.idChap),
+              ),
             );
           } else {
             showDialog(

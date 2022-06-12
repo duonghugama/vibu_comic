@@ -5,25 +5,30 @@ import 'package:vibu_comic/screen/login_screen.dart';
 import 'package:vibu_comic/screen/nguoiDoc/trangchu_screen.dart';
 import 'package:vibu_comic/screen/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'dart:io' show Platform;
-import 'package:firedart/firedart.dart';
 
 const apiKey = "AIzaSyCcNFxmTIO5wEameFIaQ_h2CQFBSYTD4TI";
 const projectID = "vibu-comic-86908";
 void main() async {
-  if (!Platform.isWindows) {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    // await FirebaseAppCheck.instance.activate();
-    runApp(
-      MyPhoneApp(),
-    );
-  } else {
-    Firestore.initialize(projectID);
-    runApp(
-      MyWindowApp(),
-    );
-  }
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await FirebaseAppCheck.instance.activate();
+  runApp(
+    MyPhoneApp(),
+  );
+  // if (!Platform.isWindows) {
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  //   // await FirebaseAppCheck.instance.activate();
+  //   runApp(
+  //     MyPhoneApp(),
+  //   );
+  // } else {
+  //   Firestore.initialize(projectID);
+  //   forWindow.FirebaseDart.setup();
+  //   runApp(
+  //     MyWindowApp(),
+  //   );
+  // }
 }
 
 class MyWindowApp extends StatelessWidget {
