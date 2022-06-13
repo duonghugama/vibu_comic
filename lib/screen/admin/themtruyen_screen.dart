@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import 'package:vibu_comic/model/truyen.dart';
 
 class ThemTruyenScreen extends StatefulWidget {
@@ -128,11 +127,11 @@ class _ThemTruyenScreenState extends State<ThemTruyenScreen> {
                                 child: IconButton(
                                   icon: Icon(Icons.add_a_photo),
                                   onPressed: () async {
-                                    // final result = await FilePicker.platform.pickFiles();
-                                    final picked = await ImagePickerWeb.getImageAsBytes();
+                                    final picked = await FilePicker.platform.pickFiles();
+                                    // final picked = await ImagePickerWeb.getImageAsBytes();
                                     if (picked != null) {
                                       setState(() {
-                                        imagePicked = picked;
+                                        imagePicked = picked as Uint8List?;
                                       });
                                     } else {
                                       setState(() {

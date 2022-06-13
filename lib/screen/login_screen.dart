@@ -33,8 +33,8 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    userNameController.text = "admin";
-    passwordController.text = "12345678";
+    // userNameController.text = "admin";
+    // passwordController.text = "12345678";
     super.initState();
   }
 

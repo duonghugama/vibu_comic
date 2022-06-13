@@ -1,7 +1,8 @@
 import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 
 import 'package:flutter/material.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
 
 class ThemChapTruyenScreen extends StatefulWidget {
   @override
@@ -76,11 +77,11 @@ class _ThemChapTruyenScreenState extends State<ThemChapTruyenScreen> {
                       child: IconButton(
                         icon: Icon(Icons.add_a_photo),
                         onPressed: () async {
-                          // final result = await FilePicker.platform.pickFiles();
-                          final picked = await ImagePickerWeb.getMultiImagesAsBytes();
+                          final picked = await FilePicker.platform.pickFiles(allowMultiple: true);
+                          // final picked = await ImagePickerWeb.getMultiImagesAsBytes();
                           if (picked != null) {
                             setState(() {
-                              listImage = picked;
+                              listImage = picked.files.map((e) => e.bytes!).toList();
                             });
                           } else {
                             setState(() {
