@@ -40,13 +40,13 @@ class Truyen extends Equatable {
       );
 
   Map<String, dynamic> toJson() => {
-        'idTruyen': idTruyen,
+        'id': idTruyen,
         'tenTruyen': tenTruyen,
         'tenKhac': tenKhac,
         'tacGia': tacGia,
         'moTa': moTa,
         'daHoanThanh': daHoanThanh,
-        'gia': gia,
+        'giaChap': gia,
         'linkAnhTruyen': linkAnhTruyen,
         'theLoai': theLoai,
         'chaps': chaps,

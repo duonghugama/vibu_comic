@@ -274,7 +274,7 @@ class _TruyenScreenState extends State<TruyenScreen> {
                               .collection("comics")
                               .doc(idTruyen.trim())
                               .collection("chaps")
-                              .doc(chap.idChap);
+                              .doc(chap.tenChap);
                           idUserUnlock.add(UserHomeScrene.userModel.id);
                           chaps.update({'idUserUnlock': idUserUnlock});
                           docUser.update({'coin': UserHomeScrene.userModel.coin - truyen.gia});
